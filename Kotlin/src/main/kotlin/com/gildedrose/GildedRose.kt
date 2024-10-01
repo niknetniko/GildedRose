@@ -57,13 +57,13 @@ val agedQualityCalculator = QualityCalculator { quality, sellIn ->
 
 val backstageQualityCalculator = QualityCalculator { quality, sellIn ->
     val newQuality = when {
-        // More than 10 days in advance
+        // More than 10 days in advance.
         sellIn >= 10 -> quality + 1
-        // 10-5 days in advance
+        // 10-5 days in advance.
         sellIn >= 5 -> quality + 2
-        // Less than 5 days in advance
+        // Less than 5 days in advance.
         sellIn >= 0 -> quality + 3
-        // Convert has passed
+        // Concert has passed, so it becomes worthless.
         else -> 0
     }
 
@@ -72,15 +72,16 @@ val backstageQualityCalculator = QualityCalculator { quality, sellIn ->
 }
 
 val conjuredQualityCalculator = QualityCalculator { quality, sellIn ->
-    // Apply the normal calculate twice, since these degrade twice as fast.
+    // Apply the default one twice, since these degrade twice as fast.
+    // This intentionally uses the default calculator to ensure that if
+    // the default rate changes for some reason, this follows.
     defaultQualityCalculator.newQuality(quality, sellIn).let {
         defaultQualityCalculator.newQuality(it, sellIn)
     }
 }
 
 // Normally these should be part of the Item class, but we cannot modify these
-// at this time, so use a map instead.
-// Hard-code the names for now.
+// at this time, so use a map instead of hardcoded names for now.
 val sellInMapping = mapOf(
     "Sulfuras, Hand of Ragnaros" to legendarySellInCalculator
 ).withDefault { defaultSellInCalculator }
@@ -95,7 +96,6 @@ val qualityMapping = mapOf(
 
 class GildedRose(private var items: List<Item>) {
     fun updateQuality() {
-
         for (item in items) {
             val sellCalculator = sellInMapping.getValue(item.name)
             val qualityCalculator = qualityMapping.getValue(item.name)
