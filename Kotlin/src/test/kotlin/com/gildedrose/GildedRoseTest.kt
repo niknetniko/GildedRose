@@ -44,9 +44,9 @@ internal class GildedRoseTest {
         "Backstage passes to a TAFKAL80ETC concert,-1,-20",
         "Backstage passes to a TAFKAL80ETC concert,-78,-20",
         // Conjured items
-        "Conjured,10,-2",
+        "Conjured Mana Cake,10,-2",
         // Conjured items after sell date
-        "Conjured,0,-4",
+        "Conjured Mana Cake,0,-4",
     )
     fun qualityDecreasesAsExpected(name: String, sellIn: Int, expectedDiff: Int) {
         val quality = 20
@@ -59,7 +59,7 @@ internal class GildedRoseTest {
     @ParameterizedTest
     @ValueSource(strings = [
         "Standard item",
-        "Conjured"
+        "Conjured Mana Cake"
     ])
     fun qualityCannotGoBelowZero(item: String) {
         val items = listOf(Item(item, 10, 1), Item(item, 0, 1))
