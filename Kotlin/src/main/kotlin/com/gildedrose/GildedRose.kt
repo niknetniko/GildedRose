@@ -58,12 +58,12 @@ val agedQualityCalculator = QualityCalculator { quality, sellIn ->
 val backstageQualityCalculator = QualityCalculator { quality, sellIn ->
     val newQuality = when {
         // More than 10 days in advance
-        sellIn > 10 -> quality + 1
+        sellIn >= 10 -> quality + 1
         // 10-5 days in advance
-        sellIn > 5 -> quality + 2
+        sellIn >= 5 -> quality + 2
         // Less than 5 days in advance
         sellIn >= 0 -> quality + 3
-        // Concert has passed
+        // Convert has passed
         else -> 0
     }
 
