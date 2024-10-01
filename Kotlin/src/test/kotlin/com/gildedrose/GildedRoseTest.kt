@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 
 internal class GildedRoseTest {
 
@@ -42,6 +43,10 @@ internal class GildedRoseTest {
         // They are worthless after the concert
         "Backstage passes to a TAFKAL80ETC concert,-1,-20",
         "Backstage passes to a TAFKAL80ETC concert,-78,-20",
+        // Conjured items
+        "Conjured,10,-2",
+        // Conjured items after sell date
+        "Conjured,0,-4",
     )
     fun qualityDecreasesAsExpected(name: String, sellIn: Int, expectedDiff: Int) {
         val quality = 20
@@ -51,14 +56,20 @@ internal class GildedRoseTest {
         assertEquals(quality + expectedDiff, items.first().quality)
     }
 
-    @Test
-    fun qualityCannotGoBelowZero() {
-        val items = listOf(Item("Item", 0, 1))
+    @ParameterizedTest
+    @ValueSource(strings = [
+        "Standard item",
+        "Conjured"
+    ])
+    fun qualityCannotGoBelowZero(item: String) {
+        val items = listOf(Item(item, 10, 1), Item(item, 0, 1))
         val app = GildedRose(items)
         app.updateQuality()
-        assertEquals(0, items.first().quality)
+        assertEquals(0, items.first().quality, "before sell date")
+        assertEquals(0, items.first().quality, "before sell date")
         app.updateQuality()
-        assertEquals(0, items.first().quality)
+        assertEquals(0, items[1].quality, "before sell date")
+        assertEquals(0, items[1].quality, "before sell date")
     }
 
     @Test
